@@ -16,7 +16,7 @@ public class RevTestTeleOp {
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //frontLeftMotor.setMode(DcMotor.
+        //frontLeftMotor.setMode(DcMotor. lihlkj
 
     }
 
