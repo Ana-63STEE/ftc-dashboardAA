@@ -6,9 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
-public class RevTestTeleOp {
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+public class TESTRevTeleOpMecanumDrive {
     private DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
-    private IMU imu;
+    private static IMU imu;
 
     public void init(HardwareMap hmMap) {
         frontLeftMotor = hmMap.get(DcMotor.class, "front_left_motor");
@@ -31,7 +33,7 @@ public class RevTestTeleOp {
 
         RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                //check usb facing direction on rev robot(s)
+                //CHECK usb facing direction on rev robot(s)
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT);
 
         imu.initialize(new IMU.Parameters(RevOrientation));
@@ -39,7 +41,7 @@ public class RevTestTeleOp {
 
     public void drive(double forward, double strafe, double rotate) {
         double frontLeftPower = forward + strafe + rotate;
-        double backLeftPower = forward - strafe - rotate;
+        double backLeftPower = forward - strafe + rotate;
         double frontRightPower = forward - strafe - rotate;
         double backRightPower = forward + strafe - rotate;
 
@@ -54,6 +56,7 @@ public class RevTestTeleOp {
         maxPower = Math.max(maxPower, Math.abs(backRightPower));
 
         //set motor powers
+        //can remove maxSpeed if driver is the only one driving
         frontLeftMotor.setPower(maxSpeed*(frontLeftPower/maxPower));
         backLeftMotor.setPower(maxSpeed*(backLeftPower/maxPower));
         frontRightMotor.setPower(maxSpeed*(frontRightPower/maxPower));
@@ -63,6 +66,18 @@ public class RevTestTeleOp {
 
     //FIELD ORIENTATED DRIVING
     public void driveFieldRelative(double forward, double strafe, double rotate) {
+        double theta = Math.atan2(forward, strafe);
+        double r = Math.hypot(strafe, forward);
+
+        theta = AngleUnit.normalizeRadians(theta-
+                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+
+        double newForward = r * Math.sin(theta);
+        double newStrafe = r * Math.cos(theta);
+
+        //core of field orientated driving
+        this.drive(newForward, newStrafe, rotate);
 
     }
 }
+
