@@ -13,10 +13,10 @@ public class TESTRevTeleOpMecanumDrive {
     private static IMU imu;
 
     public void init(HardwareMap hmMap) {
-        frontLeftMotor = hmMap.get(DcMotor.class, "front_left_motor");
-        backLeftMotor = hmMap.get(DcMotor.class, "back_left_motor");
-        frontRightMotor = hmMap.get(DcMotor.class, "front_right_motor");
-        backRightMotor = hmMap.get(DcMotor.class, "back_right_motor");
+        frontLeftMotor = hmMap.get(DcMotor.class, "frontL");
+        backLeftMotor = hmMap.get(DcMotor.class, "backL");
+        frontRightMotor = hmMap.get(DcMotor.class, "frontR");
+        backRightMotor = hmMap.get(DcMotor.class, "backR");
 
         //Reverse for mecanum drivetrain
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
