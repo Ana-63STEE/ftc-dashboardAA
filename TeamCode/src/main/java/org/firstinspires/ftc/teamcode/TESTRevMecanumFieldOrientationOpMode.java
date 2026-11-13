@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@TeleOp
 public class TESTRevMecanumFieldOrientationOpMode extends OpMode {
 
     TESTRevTeleOpMecanumDrive drive = new TESTRevTeleOpMecanumDrive();
@@ -16,10 +18,12 @@ public class TESTRevMecanumFieldOrientationOpMode extends OpMode {
     @Override
     public void loop() {
         forward = gamepad1.left_stick_y;
-        strafe = gamepad1.left_stick_x;
-        rotate = gamepad1.right_stick_x;
+        //strafe is left stick
+        strafe = -gamepad1.right_stick_x;
+        //rotate is right stick
+        rotate = -gamepad1.left_stick_x;
 
-        drive.driveFieldRelative(forward, strafe, rotate);
+        drive.drive(forward, strafe, rotate);
 
 
     }

@@ -13,22 +13,24 @@ public class TESTRevTeleOpMecanumDrive {
     private static IMU imu;
 
     public void init(HardwareMap hmMap) {
-        frontLeftMotor = hmMap.get(DcMotor.class, "frontL");
-        backLeftMotor = hmMap.get(DcMotor.class, "backL");
-        frontRightMotor = hmMap.get(DcMotor.class, "frontR");
-        backRightMotor = hmMap.get(DcMotor.class, "backR");
+        frontLeftMotor = hmMap.get(DcMotor.class, "frontLeft");
+        backLeftMotor = hmMap.get(DcMotor.class, "backLeft");
+        frontRightMotor = hmMap.get(DcMotor.class, "frontRight");
+        backRightMotor = hmMap.get(DcMotor.class, "backRight");
 
-        //Reverse for mecanum drivetrain
+        //Reverse ALL motors for mecanum drivetrain
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Achieve same speed/velocity across all motors regardless of friction on motor
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        //built in imu on REV hub
+        //built in imu on REV hub, NO PINPOINT NECCESSARY
         imu = hmMap.get(IMU.class, "imu");
 
         RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(
@@ -62,22 +64,22 @@ public class TESTRevTeleOpMecanumDrive {
         frontRightMotor.setPower(maxSpeed*(frontRightPower/maxPower));
         backRightMotor.setPower(maxSpeed*(backRightPower/maxPower));
 
-    }
-
-    //FIELD ORIENTATED DRIVING
-    public void driveFieldRelative(double forward, double strafe, double rotate) {
-        double theta = Math.atan2(forward, strafe);
-        double r = Math.hypot(strafe, forward);
-
-        theta = AngleUnit.normalizeRadians(theta-
-                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
-
-        double newForward = r * Math.sin(theta);
-        double newStrafe = r * Math.cos(theta);
-
-        //core of field orientated driving
-        this.drive(newForward, newStrafe, rotate);
 
     }
+
+    //FIELD ORIENTATED/CENTRIC DRIVING
+//    public void driveFieldRelative(double forward, double strafe, double rotate) {
+//        double theta = Math.atan2(forward, strafe);
+//        double r = Math.hypot(strafe, forward);
+//
+//        theta = AngleUnit.normalizeRadians(theta-
+//                imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+//
+//        double newForward = r * Math.sin(theta);
+//        double newStrafe = r * Math.cos(theta);
+//
+//        //core of field orientated driving
+//        this.drive(newForward, newStrafe, rotate);
+//
+//    }
 }
-
